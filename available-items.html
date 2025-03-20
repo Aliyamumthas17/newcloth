@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ClothCare - Available Donations</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style>
+        /* Additional styles for the items gallery */
+        .items-container {
+            padding: 40px 5%;
+            background-color: #f9f9f9;
+        }
+        
+        .items-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        
+        .items-header h1 {
+            color: #4a89dc;
+            margin-bottom: 15px;
+        }
+        
+        .items-header p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .filter-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+        }
+        
+        .filter-group {
+            margin: 10px 0;
+        }
+        
+        .filter-group select, .search-box input {
+            padding: 10px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            font-size: 16px;
+        }
+        
+        .search-box {
+            position: relative;
+        }
+        
+        .search-box input {
+            padding-left: 40px;
+            min-width: 250px;
+        }
+        
+        .search-box i {
+            position: absolute;
+            left: 15px;
+            top: 13px;
+            color: #666;
+        }
+        
+        .items-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 30px;
+        }
+        
+        .item-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+        
+        .item-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .item-image {
+            height: 220px;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+        
+        .item-badge {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: #4a89dc;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .item-info {
+            padding: 20px;
+        }
+        
+        .item-info h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+        
+        .item-details {
+            display: flex;
+            flex-wrap: wrap;
+            margin-bottom: 15px;
+        }
+        
+        .item-detail {
+            display: flex;
+            align-items: center;
+            margin-right: 15px;
+            margin-bottom: 5px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .item-detail i {
+            margin-right: 5px;
+            color: #4a89dc;
+        }
+        
+        .item-actions {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .request-btn {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        
+        .request-btn:hover {
+            background: #3d8b40;
+        }
+        
+        .favorite-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #ccc;
+            transition: color 0.3s;
+        }
+        
+        .favorite-btn:hover, .favorite-btn.active {
+            color: #ff6b6b;
+        }
+        
+        .pagination {
+            margin-top: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .pagination a {
+            display: inline-block;
+            padding: 8px 12px;
+            margin: 0 5px;
+            border-radius: 5px;
+            background: #f0f0f0;
+            color: #666;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+        
+        .pagination a:hover, .pagination a.active {
+            background: #4a89dc;
+            color: white;
+        }
+        
+        .no-items {
+            text-align: center;
+            padding: 50px 0;
+        }
+        
+        .no-items i {
+            font-size: 60px;
+            color: #ddd;
+            margin-bottom: 20px;
+        }
+        
+        .no-items h3 {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        @media (max-width: 768px) {
+            .filter-controls {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .filter-group, .search-box {
+                width: 100%;
+                margin-bottom: 15px;
+            }
+            
+            .search-box input {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-brand">
+            <i class="fas fa-tshirt"></i>
+            <span>ClothCare</span>
+        </div>
+        <div class="nav-links" id="navLinks">
+            <a href="index.html">Home</a>
+            <a href="about.html">
+                <button type="button" class="nav-button">About</button>
+            </a>
+            <a href="donation.html">
+                <button type="button" class="nav-button">Donate</button>
+            </a>
+            <a href="receiver.html">
+                <button type="button" class="nav-button">Receive</button>
+            </a>
+            <a href="contact.html">
+                <button type="button" class="nav-button">Contact</button>
+            </a>
+            <a href="log.html">
+                <button type="button" class="nav-button">Login</button>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Available Items Header -->
+    <section class="items-container">
+        <div class="items-header">
+            <h1>Available Clothing Items</h1>
+            <p>Browse through our collection of donated items. You can filter by category, size, or condition to find what you need.</p>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="filter-controls">
+            <div class="filter-group">
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="shirts">Shirts</option>
+                    <option value="pants">Pants</option>
+                    <option value="jackets">Jackets</option>
+                    <option value="shoes">Shoes</option>
+                    <option value="dresses">Dresses</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <select id="sizeFilter">
+                    <option value="">All Sizes</option>
+                    <option value="xs">XS</option>
+                    <option value="s">S</option>
+                    <option value="m">M</option>
+                    <option value="l">L</option>
+                    <option value="xl">XL</option>
+                    <option value="xxl">XXL</option>
+                </select>
+            </div>
+            <div class="filter-group">
+                <select id="conditionFilter">
+                    <option value="">All Conditions</option>
+                    <option value="new">New</option>
+                    <option value="likeNew">Like New</option>
+                    <option value="good">Good</option>
+                    <option value="fair">Fair</option>
+                </select>
+            </div>
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" placeholder="Search items...">
+            </div>
+        </div>
+
+        <!-- Items Grid -->
+        <div class="items-grid">
+            <!-- Item Card 1 -->
+            <div class="item-card">
+                <div class="item-image">
+                    <img src="/api/placeholder/400/300" alt="Winter Jacket">
+                    <span class="item-badge">Like New</span>
+                </div>
+                <div class="item-info">
+                    <h3>Winter Jacket</h3>
+                    <div class="item-details">
+                        <span class="item-detail"><i class="fas fa-tag"></i> Jackets</span>
+                        <span class="item-detail"><i class="fas fa-ruler"></i> Size M</span>
+                        <span class="item-detail"><i class="fas fa-map-marker-alt"></i> Downtown</span>
+                    </div>
+                    <p>Warm winter jacket, barely used, perfect for cold weather.</p>
+                    <div class="item-actions">
+                        <button class="request-btn">Request Item</button>
+                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Card 2 -->
+            <div class="item-card">
+                <div class="item-image">
+                    <img src="/api/placeholder/400/300" alt="Summer Dress">
+                    <span class="item-badge">New</span>
+                </div>
+                <div class="item-info">
+                    <h3>Summer Dress</h3>
+                    <div class="item-details">
+                        <span class="item-detail"><i class="fas fa-tag"></i> Dresses</span>
+                        <span class="item-detail"><i class="fas fa-ruler"></i> Size S</span>
+                        <span class="item-detail"><i class="fas fa-map-marker-alt"></i> Westside</span>
+                    </div>
+                    <p>Light cotton summer dress, never worn, still has tags.</p>
+                    <div class="item-actions">
+                        <button class="request-btn">Request Item</button>
+                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Card 3 -->
+            <div class="item-card">
+                <div class="item-image">
+                    <img src="/api/placeholder/400/300" alt="Jeans">
+                    <span class="item-badge">Good</span>
+                </div>
+                <div class="item-info">
+                    <h3>Blue Jeans</h3>
+                    <div class="item-details">
+                        <span class="item-detail"><i class="fas fa-tag"></i> Pants</span>
+                        <span class="item-detail"><i class="fas fa-ruler"></i> Size 32</span>
+                        <span class="item-detail"><i class="fas fa-map-marker-alt"></i> East End</span>
+                    </div>
+                    <p>Classic blue jeans, comfortable fit, gently worn.</p>
+                    <div class="item-actions">
+                        <button class="request-btn">Request Item</button>
+                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Card 4 -->
+            <div class="item-card">
+                <div class="item-image">
+                    <img src="/api/placeholder/400/300" alt="Sweater">
+                    <span class="item-badge">Like New</span>
+                </div>
+                <div class="item-info">
+                    <h3>Wool Sweater</h3>
+                    <div class="item-details">
+                        <span class="item-detail"><i class="fas fa-tag"></i> Shirts</span>
+                        <span class="item-detail"><i class="fas fa-ruler"></i> Size L</span>
+                        <span class="item-detail"><i class="fas fa-map-marker-alt"></i> North Side</span>
+                    </div>
+                    <p>Soft wool sweater, great for fall and winter months.</p>
+                    <div class="item-actions">
+                        <button class="request-btn">Request Item</button>
+                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Card 5 -->
+            <div class="item-card">
+                <div class="item-image">
+                    <img src="/api/placeholder/400/300" alt="T-Shirt">
+                    <span class="item-badge">Good</span>
+                </div>
+                <div class="item-info">
+                    <h3>Cotton T-Shirt</h3>
+                    <div class="item-details">
+                        <span class="item-detail"><i class="fas fa-tag"></i> Shirts</span>
+                        <span class="item-detail"><i class="fas fa-ruler"></i> Size XL</span>
+                        <span class="item-detail"><i class="fas fa-map-marker-alt"></i> South Area</span>
+                    </div>
+                    <p>Comfortable cotton t-shirt, perfect for everyday wear.</p>
+                    <div class="item-actions">
+                        <button class="request-btn">Request Item</button>
+                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item Card 6 -->
+            <div class="item-card">
+                <div class="item-image">
+                    <img src="/api/placeholder/400/300" alt="Running Shoes">
+                    <span class="item-badge">Fair</span>
+                </div>
+                <div class="item-info">
+                    <h3>Running Shoes</h3>
+                    <div class="item-details">
+                        <span class="item-detail"><i class="fas fa-tag"></i> Shoes</span>
+                        <span class="item-detail"><i class="fas fa-ruler"></i> Size 9</span>
+                        <span class="item-detail"><i class="fas fa-map-marker-alt"></i> West End</span>
+                    </div>
+                    <p>Athletic running shoes, still have plenty of life left.</p>
+                    <div class="item-actions">
+                        <button class="request-btn">Request Item</button>
+                        <button class="favorite-btn"><i class="far fa-heart"></i></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination -->
+        <div class="pagination">
+            <a href="#" class="active">1</a>
+            <a href="#">2</a>
+            <a href="#">3</a>
+            <a href="#">&raquo;</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section">
+                <h3>ClothCare</h3>
+                <p>Making a difference, one donation at a time.</p>
+            </div>
+            <div class="footer-section">
+                <h3>Connect With Us</h3>
+                <div class="social-links">
+                    <a href="#"><i class="fab fa-facebook"></i></a>
+                    <a href="#"><i class="fab fa-twitter"></i></a>
+                    <a href="#"><i class="fab fa-instagram"></i></a>
+                </div>
+            </div>
+            <div class="footer-section">
+                <h3>Quick Links</h3>
+                <div class="footer-links">
+                    <ul>
+                        <li><a href="index.html">Home</a></li>
+                        <li><a href="about.html">About</a></li>
+                        <li><a href="donation.html">Donate</a></li>
+                        <li><a href="receiver.html">Receive</a></li>
+                        <li><a href="contact.html">Contact</a></li>
+                        <li><a href="log.html">Login</a></li>
+                    </ul>  
+                </div>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <p>&copy; 2025 ClothCare. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <button id="scrollTop" class="scroll-top">
+        <i class="fas fa-arrow-up"></i>
+    </button>
+
+    <script>
+        // JavaScript for item gallery functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Favorite button functionality
+            const favoriteButtons = document.querySelectorAll('.favorite-btn');
+            favoriteButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    const icon = this.querySelector('i');
+                    if (icon.classList.contains('far')) {
+                        icon.classList.remove('far');
+                        icon.classList.add('fas');
+                        this.classList.add('active');
+                    } else {
+                        icon.classList.remove('fas');
+                        icon.classList.add('far');
+                        this.classList.remove('active');
+                    }
+                });
+            });
+
+            // Filter functionality (basic implementation)
+            const categoryFilter = document.getElementById('categoryFilter');
+            const sizeFilter = document.getElementById('sizeFilter');
+            const conditionFilter = document.getElementById('conditionFilter');
+            const searchBox = document.querySelector('.search-box input');
+            
+            // For a complete implementation, you would add event listeners to these
+            // elements and filter the items accordingly, likely with AJAX requests
+            // to fetch filtered data from the server.
+            
+            // Example filter change listener
+            categoryFilter.addEventListener('change', filterItems);
+            sizeFilter.addEventListener('change', filterItems);
+            conditionFilter.addEventListener('change', filterItems);
+            searchBox.addEventListener('input', filterItems);
+            
+            function filterItems() {
+                // This is a placeholder for the actual filtering logic
+                console.log('Filtering items with:');
+                console.log('Category:', categoryFilter.value);
+                console.log('Size:', sizeFilter.value);
+                console.log('Condition:', conditionFilter.value);
+                console.log('Search:', searchBox.value);
+                
+                // In a real implementation, you would:
+                // 1. Either fetch filtered data from the server via AJAX
+                // 2. Or filter the existing items in the DOM
+            }
+            
+            // Request button functionality
+            const requestButtons = document.querySelectorAll('.request-btn');
+            requestButtons.forEach(button => {
+                button.addEventListener('click', function() {
+                    // In a real implementation, this would open a modal or navigate to a request form
+                    alert('Request submitted! We will contact you about this item.');
+                    this.textContent = 'Requested';
+                    this.disabled = true;
+                    this.style.background = '#999';
+                });
+            });
+            
+            // Scroll to top button
+            const scrollTopButton = document.getElementById('scrollTop');
+            window.addEventListener('scroll', function() {
+                if (window.pageYOffset > 300) {
+                    scrollTopButton.style.display = 'block';
+                } else {
+                    scrollTopButton.style.display = 'none';
+                }
+            });
+            
+            scrollTopButton.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>

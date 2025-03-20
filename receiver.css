@@ -1,0 +1,134 @@
+/* Receiver Page Styles */
+.receiver-section {
+    padding: 120px 5% 60px;
+    background-color: var(--light-gray);
+    min-height: 100vh;
+}
+
+.receiver-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: var(--shadow);
+}
+
+.receiver-container h2 {
+    text-align: center;
+    color: var(--secondary-color);
+    margin-bottom: 0.5rem;
+}
+
+.form-description {
+    text-align: center;
+    color: #666;
+    margin-bottom: 2rem;
+}
+
+.form-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background: #f9f9f9;
+    border-radius: 8px;
+}
+
+.form-section h3 {
+    color: var(--primary-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.receiver-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.receiver-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--text-color);
+}
+
+.receiver-form input[type="text"],
+.receiver-form input[type="email"],
+.receiver-form input[type="tel"],
+.receiver-form input[type="number"],
+.receiver-form select,
+.receiver-form textarea {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.receiver-form input:focus,
+.receiver-form select:focus,
+.receiver-form textarea:focus {
+    border-color: var(--primary-color);
+    outline: none;
+}
+
+.receiver-form textarea {
+    min-height: 100px;
+    resize: vertical;
+}
+
+.checkbox-group {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin-top: 0.5rem;
+}
+
+.checkbox-group label {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: normal;
+}
+
+.file-info {
+    font-size: 0.9rem;
+    color: #666;
+    margin-top: 0.5rem;
+}
+
+.submit-btn {
+    width: 100%;
+    padding: 1rem;
+    background: var(--primary-color);
+    color: var(--white);
+    border: none;
+    border-radius: 5px;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-top: 1rem;
+}
+
+.submit-btn:hover {
+    background: #357abd;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .receiver-section {
+        padding: 100px 20px 40px;
+    }
+
+    .receiver-container {
+        padding: 1.5rem;
+    }
+
+    .form-section {
+        padding: 1rem;
+    }
+
+    .checkbox-group {
+        grid-template-columns: 1fr;
+    }
+}
